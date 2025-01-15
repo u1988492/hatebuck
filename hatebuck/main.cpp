@@ -56,8 +56,8 @@ map<string, shared_ptr<Usuario>> inicializarDatos(){
     map<string, shared_ptr<Usuario>> usuarios;
 
     // usuarios normales
-    usuarios["gemmaReina"] = make_shared<Usuario>("gemmaReina", "");
-    usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "");
+    usuarios["gemmaReina"] = make_shared<Usuario>("gemmaReina", "contrasenyaImposibleDeAdivinar");
+    usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "noSeQuePoner.!#");
     usuarios["cHodoroga"] = make_shared<Usuario("cHodoroga", "password123");
 
     // usuarios moderadores
