@@ -1,15 +1,19 @@
 #ifndef IPALABRA_H
 #define IPALABRA_H
 
+using namespace std;
+
+// clase IPalabra: clase abstracta para implementar el patrón Strategy (??) para la gestión dinámica de los diferentes tipos de palabra
 
 class IPalabra
 {
     public:
-        IPalabra();
-
-    protected:
-
-    private:
+        // destructor por defecto
+        virtual ~IPalabra() = default;
+        // función para mostrar el contenido de la palabra
+        virtual string mostrarContenido() const = 0;
+        // función para obtener el tipo de palabra
+        virtual string obtTipo() const = 0;
 };
 
 #endif // IPALABRA_H

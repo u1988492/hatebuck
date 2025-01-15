@@ -1,15 +1,23 @@
 #ifndef IPUBLICACION_H
 #define IPUBLICACION_H
 
+using namespace std;
+
+// clase interfaz IPublicación: clase abstracta para implementar el patrón Decorator en la gestión de las publicaciones
 
 class IPublicacion
 {
     public:
-        IPublicacion();
+        // destructor por defecto
+        virtual ~IPublicacion() = default;
+        // función para mostrar el contenido de la publicación
+        virtual string contenido() const = 0;
+        // función para editar el contenido de la publicación
+        virtual void editarContenido(const vector<sha<IPalabra>>& nuevoContenido) = 0;
+        // función para obtener los datos de la publicación
+        virtual string obtenerMetadata() const = 0;
 
-    protected:
 
-    private:
 };
 
 #endif // IPUBLICACION_H
