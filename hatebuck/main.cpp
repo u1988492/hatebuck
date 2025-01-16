@@ -27,7 +27,8 @@ void cambiarRelacion();
 void modificarPublicacion();
 void enviarMensaje();
 void gestionarOpciones();
-vector<shared_ptr<IPalabra>> leerSecuenciaPalabra();
+vector<shared_ptr<IPalabra>> leerSecuenciaPalabras();
+shared_ptr<IPalabra> leerPalabra();
 
 // función principal
 int main()
@@ -148,7 +149,40 @@ void modificarPublicacion(){
 // función para gestionar la interacción con el usuario en la opción 3
 void cambiarRelacion(){
     string nombreUsuario;
-    cout << "";
+    cout << "Introduce el nombre del usuario con el que quieres establecer una relación: ";
+    getline(cin, nombreUsuario);
+
+    auto it = usuarios.find(nombreUsuario);
+    if(it == usuarios.end()){
+        cout << "Error: Usuario no encontrado" << endl;
+        return;
+    }
+
+    cout << "Selecciona el tipo de relación" << endl:
+    cout << "1. Saludado" << endl;
+    cout << "2. Conocido" << endl;
+    cout << "3. Amigo" << endl;
+    int tipoRel;
+    cin >> tipoRel;
+    cin.ignore();
+
+    TipoRelacion tipo;
+    if(tipoRel == 1){
+        tipo == TipoRelacion::SALUDADO;
+    }
+    else if(tipoRel == 2){
+        tipo = TipoRelacion::CONOCIDO;
+    }
+    else if(tipoRel == 3){
+        tipo = TipoRelacion::AMIGO;
+    }
+    else{
+        cout << "Opción no válida" << endl;
+        return;
+    }
+
+    usuarioActual->establecerRelacion(nombreUsuario, tipo);
+    cout << "Relación establecida correctamente" << endl;
 }
 
 // función que ejecuta el programa. lee los datos de los usuarios del archivo de entrada, gestiona el inicio de sesión, y gestiona las opciones de menú
@@ -202,7 +236,7 @@ bool verificarPassword(const string& pwd, const string& nombre, const map<string
 }
 
 // función para iniciar sesión; pide al usuario su nombre de usuario y contraseña, y comprueba si existen en la base de datos
-void login(const map<string, shared_ptr<Usuario>>& usuarios){
+void login(const map<string, shared_ptr<Usuario>>& usuarios, const shared_ptr<Usuario>& usuarioActual){
     string nombre, pwd;
     cout << "Usuario: ";
     cin >> nombre;
@@ -211,6 +245,7 @@ void login(const map<string, shared_ptr<Usuario>>& usuarios){
 
     char retry = 'N';
 
+    // mientras que la contraseña sea incorrecta, preguntar si se quiere volver a intentar
     if(verificarPassword(pwd, nombre, usuarios) == false){
         do{
             cout << "Contraseña incorrecta. ¿Desea volver a intentarlo? (S/N)" << endl;
@@ -226,4 +261,79 @@ void login(const map<string, shared_ptr<Usuario>>& usuarios){
 
         }while(verificarPassword(pwd, nombre, usuarios) == false && retry=='S');
     }
+
+    // si la contraseña es correcta, iniciar la sesión como el usuario indicado
+    usuarioActual = usuarios[nombre];
+}
+
+// función para leer secuencias de palabras
+vector<shared_ptr<IPalabra>> leerSecuenciaPalabras(){
+    vector<shared_ptr<IPalabra>> palabras;
+    string entrada;
+
+    cout << "Introduce palabras/símbolos (escribe 'FIN' para terminar): " << endl;
+
+    while(true){
+        cout << "Nueva entrada ('FIN' para terminar): ";
+        getline(cin, entrada);
+
+        if(entrada == 'FIN') break;
+
+        auto palabra = leerPalabra(entrada);
+        if(palabra){
+            palabras.push_back(move(palabra));
+        }
+    }
+
+    return palabras;
+}
+
+// función para leer una palabra
+shared_ptr<IPalabra> leerPalabra(const string& entrada){
+    cout << "Tipo de entrada: " << endl;
+    cout << "1. Palabra" << endl;
+    cout << "2. Símbolo" << endl;
+    cout << "Selección: ";
+
+    int tipoEntrada;
+    cin >> tipoEntrada;
+    cin.ignore();
+
+    // si es un símbolo
+    if(tipoEntrada == 2){
+        return make_shared<Simbolo>(entrada);
+    }
+    // si es una palabra
+    else if(tipoEntrada==1){
+        cout << "Tipo de palabra:" << endl;
+        cout << "1. Normal" << endl;
+        cout << "2. No mostrar" << endl;
+        cout << "3. Reemplazar" << endl;
+        cout << "Selección: ";
+
+        int tipoPalabra;
+        cin >> tipoPalabra;
+        cin.ignore();
+
+        if(tipoPalabra == 1){
+            return make_shared<Palabra>(entrada, "NORMAL");
+        }
+        else if(tipoPalabra == 2){
+            return make_shared<NoMostrar>(entrada);
+        }
+        else if(tipoPalabra == 3){
+            cout << "Palabra de reemplazo: ":
+            string reemplazo;
+            getline(cin, reemplazo);
+            return make_shared<Reemplazar>(entrada, reemplazo);
+        }
+        else{
+            cout << "Opción no válida" << endl;
+            return nullptr;
+        }
+    }
+
+    cout << "Opción no válida" << endl;
+    return nullptr;
+
 }
