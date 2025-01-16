@@ -11,6 +11,7 @@
 #include "IPalabra.h"
 #include "Mensaje.h"
 #include "Enums.h"
+#include "PublicacionBase.h"
 
 using namespace std;
 
@@ -20,14 +21,18 @@ map<string, shared_ptr<Usuario>> usuarios;
 
 // declaración de funciones de la aplicación
 void ejecutar();
-map<string, shared_ptr<Usuario>> inicializarDatos();
 void mostrarMenu();
 void login(const map<string, shared_ptr<Usuario>>& usuarios);
 void cambiarRelacion();
 void modificarPublicacion();
 void enviarMensaje();
 void gestionarOpciones();
-vector<shared_ptr<IPalabra>> leerSecuenciaPalabra();
+void procesarArchivoEntrada(map<string, shared_ptr<Usuario>>& usuarios);
+void procesarPublicaciones(const string& linea, map<string, shared_ptr<Usuario>>& usuarios, ifstream& fin);
+vector<shared_ptr<IPalabra>> leerSecuenciaPalabras();
+shared_ptr<IPalabra> leerPalabra(const string& entrada);
+vector<string> tokens(const string &s, char separador, bool cometes);
+string token(const string &s, char separador, bool cometes, long &primer, long &ultim);
 
 // función principal
 int main()
@@ -88,7 +93,7 @@ void enviarMensaje(){
     }
 
     cout << "Introduce el mensaje. Cada palabra será procesada indivudualmente." << endl;
-    auto palabras = leerSecuenciaPalabra();
+    auto palabras = leerSecuenciaPalabras();
 
     usuarioActual->enviarMensaje(destinatario, palabras);
     cout << "Mensaje enviado correctamente" << endl;
@@ -127,7 +132,7 @@ void modificarPublicacion(){
     cin.ignore();
 
     cout << "Introduce el nuevo contenido. Cada palabra será procesada individualmente." << endl;
-    auto nuevaPub = leerSecuenciaPalabra();
+    auto nuevaPub = leerSecuenciaPalabras();
 
     // editar la publicación y mostrar mensaje de confirmación
     bool exito;
@@ -135,7 +140,7 @@ void modificarPublicacion(){
         exito = moderador->editarPublicacion(pubIndex, nuevaPub, *usuarios[nombreUsuario]);
     }
     else{
-        exito = usuarioActual->editarPublicacion(pubIndex, nuevaPub); //
+        exito = usuarioActual->editarPublicacion(pubIndex, nuevaPub);
     }
 
     if(exito){
@@ -149,7 +154,7 @@ void modificarPublicacion(){
 // función para gestionar la interacción con el usuario en la opción 3
 void cambiarRelacion(){
     string nombreUsuario;
-    int tipoRelacion;
+    int tipoRel;
 
     cout << "Introduce el nombre del usuario con el que deseas establecer una nueva relación: ";
     cin.ignore();
@@ -168,20 +173,26 @@ void cambiarRelacion(){
          << "2. Conocido\n"
          << "3. Amigo\n"
          << "Opción: ";
-    cin >> tipoRelacion;
+    cin >> tipoRel;
+    cin.ignore();
 
-    TipoRelacion nuevaRelacion;
-    switch(tipoRelacion){
-        case 1: nuevaRelacion = TipoRelacion::SALUDADO; break;
-        case 2: nuevaRelacion = TipoRelacion::CONOCIDO; break;
-        case 3: nuevaRelacion = TipoRelacion::AMIGO; break;
-        default:
-            cout << "Opción inválida." << endl;
-            return;
+    TipoRelacion tipo;
+    if(tipoRel == 1){
+        tipo == TipoRelacion::SALUDADO;
+    }
+    else if(tipoRel == 2){
+        tipo = TipoRelacion::CONOCIDO;
+    }
+    else if(tipoRel == 3){
+        tipo = TipoRelacion::AMIGO;
+    }
+    else{
+        cout << "Opción no válida" << endl;
+        return;
     }
 
     // Establecer la nueva relación
-    usuarioActual->establecerRelacion(nombreUsuario, nuevaRelacion);
+    usuarioActual->establecerRelacion(nombreUsuario, tipo);
     cout << "Relación actualizada correctamente." << endl;
 
     // Mostrar el estado actualizado de las relaciones del usuario
@@ -199,7 +210,7 @@ void cambiarRelacion(){
 
 // función que ejecuta el programa. lee los datos de los usuarios del archivo de entrada, gestiona el inicio de sesión, y gestiona las opciones de menú
 void ejecutar(){
-    usuarios = inicializarDatos();
+    procesarArchivoEntrada(usuarios);
 
     login(usuarios);
 
@@ -216,26 +227,6 @@ void mostrarMenu(){
     cout << "3. Establecer una relación con un usuario" << endl;
     cout << "4. Mostrar menú" << endl;
     cout << endl;
-}
-
-// función para inicializar datos de usuarios de la aplicación a partir del nombre y la contraseña. Devuelve un map con los usuarios creados
-map<string, shared_ptr<Usuario>> inicializarDatos(){
-    map<string, shared_ptr<Usuario>> usuarios;
-
-    // usuarios normales
-    usuarios["gemmaReina"] = make_shared<Usuario>("gemmaReina", "contrasenyaImposibleDeAdivinar");
-    usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "noSeQuePoner");
-    usuarios["cHodoroga"] = make_shared<Usuario>("cHodoroga", "password123");
-
-    // usuarios moderadores
-    usuarios["jordiRegincos"] = make_shared<Moderador>("jordiRegincos", "elsPatronsGraspMolan");
-
-    // relaciones iniciales
-    usuarios["gemmaReina"]->establecerRelacion("fedeDiaz", TipoRelacion::AMIGO);
-    usuarios["fedeDiaz"]->establecerRelacion("gemmaReina", TipoRelacion::AMIGO);
-    usuarios["cHodoroga"]->establecerRelacion("fedeDiaz", TipoRelacion::SALUDADO);
-
-    return usuarios;
 }
 
 bool verificarPassword(const string& pwd, const string& nombre, const map<string, shared_ptr<Usuario>>& usuarios){
@@ -273,14 +264,223 @@ void login(const map<string, shared_ptr<Usuario>>& usuarios){
         }while(verificarPassword(pwd, nombre, usuarios) == false && retry=='S');
     }
 }
-vector<shared_ptr<IPalabra>> leerSecuenciaPalabra() {
-    vector<shared_ptr<IPalabra>> palabras;
-    string palabra;
 
-    cout << "Introduce palabras (escribe 'FIN' para terminar): " << endl;
-    while (cin >> palabra && palabra != "FIN") {
-        palabras.push_back(make_shared<Palabra>(palabra, "NORMAL"));
+// función para leer secuencias de palabras
+vector<shared_ptr<IPalabra>> leerSecuenciaPalabras(){
+    vector<shared_ptr<IPalabra>> palabras;
+    string entrada;
+
+    cout << "Introduce palabras/símbolos (escribe 'FIN' para terminar): " << endl;
+
+    while(true){
+        cout << "Nueva entrada ('FIN' para terminar): ";
+        getline(cin, entrada);
+
+        if(entrada == "FIN") break;
+
+        auto palabra = leerPalabra(entrada);
+        if(palabra){
+            palabras.push_back(move(palabra));
+        }
     }
 
     return palabras;
+}
+
+// función para leer una palabra
+shared_ptr<IPalabra> leerPalabra(const string& entrada){
+    cout << "Tipo de entrada: " << endl;
+    cout << "1. Palabra" << endl;
+    cout << "2. Símbolo" << endl;
+    cout << "Selección: ";
+
+    int tipoEntrada;
+    cin >> tipoEntrada;
+    cin.ignore();
+
+    // si es un símbolo
+    if(tipoEntrada == 2){
+        return make_shared<Simbolo>(entrada);
+    }
+    // si es una palabra
+    else if(tipoEntrada==1){
+        cout << "Tipo de palabra:" << endl;
+        cout << "1. Normal" << endl;
+        cout << "2. No mostrar" << endl;
+        cout << "3. Reemplazar" << endl;
+        cout << "Selección: ";
+
+        int tipoPalabra;
+        cin >> tipoPalabra;
+        cin.ignore();
+
+        if(tipoPalabra == 1){
+            return make_shared<Palabra>(entrada, "NORMAL");
+        }
+        else if(tipoPalabra == 2){
+            return make_shared<NoMostrar>(entrada);
+        }
+        else if(tipoPalabra == 3){
+            cout << "Palabra de reemplazo: ";
+            string reemplazo;
+            getline(cin, reemplazo);
+            return make_shared<Reemplazar>(entrada, reemplazo);
+        }
+        else{
+            cout << "Opción no válida" << endl;
+            return nullptr;
+        }
+    }
+
+    cout << "Opción no válida" << endl;
+    return nullptr;
+
+}
+
+// función para leer los datos de los usuarios y las publicaciones del archivo de entrada
+void procesarArchivoEntrada(map<string, shared_ptr<Usuario>>& usuarios){
+    // abrir archivo
+    string fichero = "datos.txt";
+    ifstream fin(fichero);
+    if(!fin.is_open()){
+        throw runtime_error("Error: El fichero [" + fichero + "] no se pudo abrir. Repasa el nombre y los permisos.");
+    }
+    // leer usuarios
+    string linea;
+    vector<string> campos;
+    bool relaciones = false;
+    bool publicaciones = false;
+
+    while(getline(fin, linea)){
+        if(linea.empty()) continue;
+
+        if(linea[0] == '='){
+            relaciones = true;
+            continue;
+        }
+        else if(linea[0] == '*'){
+            publicaciones = true;
+            continue;
+        }
+
+        campos = tokens(linea, ' ', true);
+        if(!publicaciones){
+            if(!relaciones){
+                // leyendo usuarios
+                if(campos[2] == "m"){
+                    usuarios[campos[0]] = make_shared<Moderador>(campos[0], campos[1]); // crear moderador
+                }
+                else{
+                    usuarios[campos[0]] = make_shared<Usuario>(campos[0], campos[1]); // crear usuario normal
+                }
+            }else{
+                // leyendo relaciones
+                TipoRelacion tipo;
+                if(campos[2] == "AMIGO") tipo = TipoRelacion::AMIGO;
+                else if(campos[2] == "CONOCIDO") tipo = TipoRelacion::CONOCIDO;
+                else tipo = TipoRelacion::SALUDADO;
+
+                // buscar al usuario en la lista
+                auto it = usuarios.find(campos[0]);
+                if( it != usuarios.end()){
+                    it->second->establecerRelacion(campos[1], tipo); // crear la relación leída
+                }
+            }
+
+        }
+        else{
+            // leyendo publicaciones
+            procesarPublicaciones(linea, usuarios, fin);
+        }
+    }
+}
+
+// función encapsulada para procesar las publicaciones del archivo de entrada
+void procesarPublicaciones(const string& linea, map<string, shared_ptr<Usuario>>& usuarios, ifstream& fin){
+    vector<string> campos = tokens(linea, ' ', true);
+
+    // buscar al autor en la lista de usuarios
+    string autor = campos[0];
+    auto it = usuarios.find(autor);
+    if(it == usuarios.end()) return;
+
+    // vector para guardar las palabras de la publicacion
+    vector<shared_ptr<IPalabra>> palabras;
+    size_t nPalabras;
+
+
+
+    string lineaPalabra;
+    for(size_t i=0; i < nPalabras; i++){
+        if(!getline(fin, lineaPalabra) || lineaPalabra.empty()) break;
+
+        auto palabraCampos = tokens(lineaPalabra, ' ', true);
+        if(palabraCampos.empty()) continue;
+
+        if(palabraCampos[0] == "S"){
+            // símbolo
+            palabras.push_back(make_shared<Simbolo>(palabraCampos[1]));
+        }
+        else if(palabraCampos[0] == "P"){
+            if(palabraCampos[1] == "NORMAL"){
+                palabras.push_back(make_shared<Palabra>(palabraCampos[2], "NORMAL"));
+            }
+            else if(palabraCampos[1]=="NOMOSTRAR"){
+                palabras.push_back(make_shared<NoMostrar>(palabraCampos[2]));
+            }
+            else if(palabraCampos[1]=="REEMPLAZAR"){
+                palabras.push_back(make_shared<Reemplazar>(palabraCampos[2], palabraCampos[3]));
+            }
+        }
+    }
+    // crear y añadir la publicación
+    if(!palabras.empty()){
+        auto publicacion = make_shared<PublicacionBase>(autor);
+        publicacion->editarContenido(palabras);
+        it->second->publicarTexto(publicacion);
+    }
+}
+
+// código de eines.h para leer elementos del archivo (gracias profe)
+
+vector<string> tokens(const string &s, char separador, bool cometes) {
+    vector<string> resultat;
+    if (!s.empty()) {
+        long primer = 0, ultim = 0;
+        while (ultim != string::npos)
+            resultat.push_back(token(s, separador, cometes, primer, ultim));
+    }
+    return resultat;
+}
+
+string token(const string &s, char separador, bool cometes, long &primer, long &ultim) {
+    string t;
+
+    if (!cometes || s[primer] != '"') { // No volem tenir en compte les " o no comença per "
+        while(s[primer]==' ' && primer<s.length()) // ens  mengem els espais inicials si no hi ha cometes
+            primer++;
+        ultim = s.find(separador, primer);
+        if (ultim == string::npos)
+            t = s.substr(primer);
+        else {
+            t = s.substr(primer, ultim - primer);
+            primer = ultim + 1; // ens mengem la ,
+        }
+    } else { // comença per " i les volem tenir en compte com delimitadors
+        primer++;
+        ultim = s.find('"', primer);
+        while (s.length()>ultim+1 && s[ultim+1]=='"') {
+            ultim = s.find('"', ultim+2); //saltem "" dobles seguides
+        }
+
+        if (ultim == string::npos)
+            throw ("cometes no tancades");
+        else {
+            t = s.substr(primer, ultim - primer);
+            primer = ultim + 2; // ens mengem els ",
+            if (primer > s.length())
+                ultim = string::npos; //era l'últim token
+        }
+    }
+    return t;
 }

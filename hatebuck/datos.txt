@@ -1,0 +1,24 @@
+gemmaReina contrasenyaImposibleDeAdivinar u
+fedeDiaz noSeQuePoner u
+cHodoroga password123 u
+jordiRegincos enginyeriaSoftware2025 m
+=
+gemmaReina fedeDiaz AMIGO
+gemmaReina cHodoroga AMIGO
+fedeDiaz gemmaReina AMIGO
+cHodoroga fedeDiaz SALUDADO
+*
+gemmaReina
+5
+P NORMAL hola
+S !
+P NOMOSTRAR test
+P REEMPLAZAR guapos feos
+S .
+---
+fedeDiaz
+3
+P NORMAL adios
+S !
+P REEMPLAZAR amigos enemigos
+---

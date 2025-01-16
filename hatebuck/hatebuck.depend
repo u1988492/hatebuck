@@ -10,13 +10,13 @@
 	"IPalabra.h"
 	<vector>
 
-1737040881 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\ipalabra.h
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\ipalabra.h
 	<string>
 
 1737049236 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\palabra.cpp
 	"Palabra.h"
 
-1737046050 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\palabra.h
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\palabra.h
 	<string>
 	"IPalabra.h"
 
@@ -125,4 +125,87 @@
 1737055164 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\moderador.cpp
 	"Moderador.h"
 	"PublicacionEditada.h"
+
+1737039383 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\mensaje.cpp
+	"Mensaje.h"
+
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\mensaje.h
+	<vector>
+	<string>
+	<chrono>
+	<memory>
+	"IPalabra.h"
+
+1737049391 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\moderador.cpp
+	"Moderador.h"
+	"PublicacionEditada.h"
+
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\moderador.h
+	"Usuario.h"
+
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\usuario.h
+	<iostream>
+	<string>
+	<vector>
+	<iomanip>
+	<unordered_map>
+	<sstream>
+	<string>
+	<memory>
+	<vector>
+	"IPublicacion.h"
+	"Enums.h"
+	"ISubject.h"
+	"IObserver.h"
+	"Mensaje.h"
+
+1736107374 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\enums.h
+
+1737039182 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\isubject.h
+	<memory>
+	"IObserver.h"
+
+1737039083 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\iobserver.h
+	<string>
+	<memory>
+
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\publicacioneditada.h
+	<string>
+	<vector>
+	<chrono>
+	<IPalabra.h>
+	"PublicacionDecorator.h"
+
+1737060023 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\publicacionbase.cpp
+	"PublicacionBase.h"
+
+1737060023 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\publicacionbase.h
+	<string>
+	<vector>
+	<memory>
+	"IPalabra.h"
+	"IPublicacion.h"
+
+1737060023 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\publicacioneditada.cpp
+	"PublicacionEditada.h"
+
+1737060023 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\usuario.cpp
+	"Usuario.h"
+	"PublicacionEditada.h"
+	<algorithm>
+
+1737062126 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\main.cpp
+	<iostream>
+	<string>
+	<fstream>
+	<map>
+	<memory>
+	<iomanip>
+	"Usuario.h"
+	"Moderador.h"
+	"Palabra.h"
+	"IPalabra.h"
+	"Mensaje.h"
+	"Enums.h"
+	"PublicacionBase.h"
 
