@@ -1,6 +1,10 @@
 #ifndef PUBLICACIONBASE_H
 #define PUBLICACIONBASE_H
 
+#include <string>
+#include <vector>
+#include "IPalabra.h"
+
 using namespace std;
 
 // clase PublicacionBase: implementa IPublicacion, contiene los métodos necesarios para visualizar y modificar el contenido de una publicación

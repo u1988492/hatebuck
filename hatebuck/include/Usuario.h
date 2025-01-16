@@ -10,15 +10,18 @@
 #include <string>
 #include <memory>
 #include <vector>
+
 #include "IPublicacion.h"
 #include "Enums.h"
+#include "ISubject.h"
+#include "IObserver.h"
+#include "Mensaje.h"
 
 using namespace std;
 
 // clase usuario: almacena los datos de un usuario y gestiona las funciones básicas del usuario, de publicación de textos, y modificación de relaciones
 
-class Usuario
-{
+class Usuario : public ISubject, public IObserver{
     public:
         // constructor de usuario a partir de nombre y contraseña
         Usuario(string n, string p):
@@ -37,16 +40,26 @@ class Usuario
         const vector<shared_ptr<IPublicacion>>& obtPublicaciones()const;
         // función para editar una publicación, diferentes implementaciones para usuario o moderador
         virtual bool editarPublicacion(size_t index, const vector<shared_ptr<IPalabra>>& nuevoContenido);
+        // función para reemplazar una publicación al editarla
+        void reemplazarPublicacion(size_t index, shared_ptr<IPublicacion> nuevaPublicacion);
 
         // función para enviar un mensaje privado a un usuario
         void enviarMensaje(const string& usuario, const vector<shared_ptr<IPalabra>>& contenido);
+        // función para obtener los mensajes recibidos del usuario
+        vector<shared_ptr<Mensaje>> obtMensajesRecibidos() const;
+        // función para obtener los mensajes enviados por el usuario
+        vector<shared_ptr<Mensaje>> obtMensajesEnviados() const;
 
         // función para agregar o modificar la relación del usuario con otro
         void establecerRelacion(const string&usuario, TipoRelacion tipo);
         // función para obtener el tipo de relación del usuario con otro
         bool obtRelacion(const string&usuario, TipoRelacion& resultado) const;
 
-
+        // métodos de patrón observer para gestionar el envío de mensajes
+        void agregarObservador(const shared_ptr<IObserver>& observador) override;
+        void eliminarObservador(const shared_ptr<IObserver>& observador) override;
+        void notificar(const shared_ptr<Mensaje>& mensaje) override;
+        void actualizar(const shared_ptr<Mensaje>& mensaje) override;
 
 
     // protected para permitir la herencia con la clase moderador
@@ -55,6 +68,9 @@ class Usuario
         const string password;
         unordered_map<string, TipoRelacion> relaciones;
         vector<shared_ptr<IPublicacion>> publicaciones;
+        vector<shared_ptr<IObserver>> observadores;
+        vector<shared_ptr<Mensaje>> mensajesEnviados;
+        vector<shared_ptr<Mensaje>> mensajesRecibidos;
         // aquí irían las preferencias de mensajes y visibilidad pero quizás no hace falta implementarlo para la práctica
         // map<TipoRelacion, bool> preferenciasMensajes;
         // map<TipoRelacion, bool> preferenciasVisibilidad;

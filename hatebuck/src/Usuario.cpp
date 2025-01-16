@@ -22,8 +22,19 @@ bool Usuario::editarPublicacion(size_t pubIndex, const vector<shared_ptr<IPalabr
         return false; // la publicación no existe
     }
 
+    auto publicacionEditada = make_shared<PublicacionEditada>(
+        publicaciones[pubIndex],
+        nombre,
+        publicaciones[pubIndex]->contenido()
+    ); // crear
     publicaciones[pubIndex]->editarContenido(nuevoContenido); // pasar el contenido nuevo a la función de edicón de la publicación
     return true; // confirmar que se ha editado correctamente;
+}
+
+void Usuario::reemplazarPublicacion(size_t pubIndex, shared_ptr<IPublicacion> nuevaPublicacion){
+    if(pubIndex < publicaciones.size()){
+        publicaciones[pubIndex] = move(nuevaPublicacion);
+    }
 }
 
 const vector<shared_ptr<IPublicacion>>& Usuario::obtPublicaciones() const{
@@ -44,3 +55,51 @@ bool Usuario::obtRelacion(const string& usuario, TipoRelacion& resultado) const{
     }
     return false; // no existe una relación con el usuario indicado
 }
+
+vector<shared_ptr<Mensaje>> Usuario::obtMensajesRecibidos() const{
+    return mensajesRecibidos;
+}
+
+vector<shared_ptr<Mensaje>> Usuario::obtMensajesEnviados() const{
+    return mensajesEnviados;
+}
+
+void Usuario::enviarMensaje(const string& destinatario, const vector<shared_ptr<IPalabra>>& contenido){
+    auto mensaje = make_shared<Mensaje>(nombre, destinatario, contenido);
+    mensajesEnviados.push_back(mensaje);
+    notificar(mensaje);
+}
+
+void Usuario::agregarObservador(const shared_ptr<IObserver>& observador){
+    // añadir observador a la lista si no existe ya
+    if(find(observadores.begin(), observadores.end(), observador) == observadores.end()){
+        observadores.push_back(observador);
+    }
+}
+
+void Usuario::eliminarObservador(const shared_ptr<IObserver>& observador){
+    // quitar al observador de la lista
+    observadores.erase(remove(observadores.begin(), observadores.end(), observador), observadores.end());
+}
+
+void Usuario::notificar(const shared_ptr<Mensaje>& mensaje){
+    // notificar a los posibles destinatarios del nuevo mensaje
+    for(const auto& observador : observadores){
+        // comprobar si el receptor es el correcto
+        auto receptor = dynamic_pointer_cast<Usuario>(observador);
+        if(receptor && receptor->obtNombre() == mensaje->obtReceptor()){
+            observador->actualizar(mensaje);
+            break;
+        }
+    }
+}
+
+
+void Usuario::actualizar(const shared_ptr<Mensaje>& mensaje){
+    // verificar que el usuario es el destinatario correcto
+    if(mensaje->obtReceptor() == nombre){
+        mensajesRecibidos.push_back(mensaje);
+    }
+}
+
+

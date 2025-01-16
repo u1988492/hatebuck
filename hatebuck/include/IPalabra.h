@@ -1,6 +1,8 @@
 #ifndef IPALABRA_H
 #define IPALABRA_H
 
+#include <string>
+
 using namespace std;
 
 // clase IPalabra: clase abstracta para implementar el patrón Strategy (??) para la gestión dinámica de los diferentes tipos de palabra
