@@ -2,24 +2,89 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="include\Enums.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="12910" topLine="187" />
+		</Cursor>
+	</File>
+	<File name="include\Moderador.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="282" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Palabra.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1078" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="include\IPalabra.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="59" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Usuario.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1674" topLine="21" />
+		</Cursor>
+	</File>
+	<File name="src\Palabra.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="24" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\PublicacionDecorator.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="440" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\IPublicacion.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="90" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Usuario.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="432" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\PublicacionDecorator.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="37" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Mensaje.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="20" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\PublicacionEditada.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1123" topLine="4" />
+		</Cursor>
+	</File>
+	<File name="include\PublicacionBase.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="508" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Moderador.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="55" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Mensaje.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="124" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Enums.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="32" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\PublicacionBase.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\Usuario.cpp" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="462" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include\Usuario.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="202" topLine="5" />
+			<Cursor1 position="84" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

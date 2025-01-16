@@ -103,11 +103,13 @@ void enviarMensaje(){
 void modificarPublicacion(){
     string nombreUsuario;
     size_t pubIndex;
+    shared_ptr<Usuario> usuarioTarget = usuarioActual;
 
     // si el usuario es un moderador, pedirle el usuario del cual quiere modificar la publicación
     auto moderador = dynamic_pointer_cast<Moderador>(usuarioActual);
     if(moderador){
         cout << "Introduce el nombre del usuario cuya publicación quieres modificar: ";
+        cin.ignore();
         getline(cin, nombreUsuario);
 
         auto it = usuarios.find(nombreUsuario);
@@ -115,16 +117,22 @@ void modificarPublicacion(){
             cout << "Error: Usuario no encontrado" << endl;
             return;
         }
+        usuarioTarget = it->second; // modificar la publicación del usuario seleccionado
     }
 
     // mostrar las publicaciones disponibles
-    const auto& publicaciones = moderador ?
-        usuarios[nombreUsuario]->obtPublicaciones() : // si es moderador, mostrar las publicaciones del usuario indicado
-        usuarioActual->obtPublicaciones(); // si no es moderador, mostrar las publicaciones del usuario actual
+    const auto& publicaciones = usuarioTarget->obtPublicaciones();
+    // si es moderador, mostrar las publicaciones del usuario indicado
+    // si no es moderador, mostrar las publicaciones del usuario actual
+
+    if(publicaciones.empty()){
+        cout << "No hay publicaciones disponibles" << endl;
+        return;
+    }
 
     cout << "Publicaciones disponibles: " << endl;
     for(size_t i=0; i<publicaciones.size(); i++){
-        cout << i << ". " << publicaciones[i]->contenido() << endl;
+        cout << i+1 << ". " << publicaciones[i]->contenido() << endl;
     }
 
     cout << "Introduce el índice de la publicación a modificar: ";
@@ -137,10 +145,10 @@ void modificarPublicacion(){
     // editar la publicación y mostrar mensaje de confirmación
     bool exito;
     if(moderador){
-        exito = moderador->editarPublicacion(pubIndex, nuevaPub, *usuarios[nombreUsuario]);
+        exito = moderador->editarPublicacion(pubIndex-1, nuevaPub, *usuarios[nombreUsuario]);
     }
     else{
-        exito = usuarioActual->editarPublicacion(pubIndex, nuevaPub);
+        exito = usuarioActual->editarPublicacion(pubIndex-1, nuevaPub);
     }
 
     if(exito){
@@ -254,8 +262,7 @@ void login(const map<string, shared_ptr<Usuario>>& usuarios){
             cin >> retry;
 
             if(retry == 'N'){
-                cout << "Inicio de sesión fallido" << endl;
-                break;
+                throw runtime_error("Error: inicio de sesión fallido. Finalizando el programa.");
             }
 
             cout << "Contraseña: ";
@@ -404,13 +411,15 @@ void procesarPublicaciones(const string& linea, map<string, shared_ptr<Usuario>>
     auto it = usuarios.find(autor);
     if(it == usuarios.end()) return;
 
+    // leer la linea que contiene el numero de palabras de la publicacion
+    string lineaNPalabras;
+    if(!getline(fin, lineaNPalabras)) return;
+    size_t nPalabras = stoi(lineaNPalabras);
+
     // vector para guardar las palabras de la publicacion
     vector<shared_ptr<IPalabra>> palabras;
-    size_t nPalabras;
-
-
-
     string lineaPalabra;
+
     for(size_t i=0; i < nPalabras; i++){
         if(!getline(fin, lineaPalabra) || lineaPalabra.empty()) break;
 
@@ -438,6 +447,11 @@ void procesarPublicaciones(const string& linea, map<string, shared_ptr<Usuario>>
         auto publicacion = make_shared<PublicacionBase>(autor);
         publicacion->editarContenido(palabras);
         it->second->publicarTexto(publicacion);
+    }
+
+    // leer hasta encontrar el separador o fin de archivo
+    while(getline(fin, lineaPalabra) && lineaPalabra != "---"){
+        // ignorar lineas hasta encontrar separador
     }
 }
 
