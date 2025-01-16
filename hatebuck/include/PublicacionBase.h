@@ -3,15 +3,18 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "IPalabra.h"
-
+#include "IPublicacion.h"
 using namespace std;
 
 // clase PublicacionBase: implementa IPublicacion, contiene los métodos necesarios para visualizar y modificar el contenido de una publicación
 
-class PublicacionBase
+class PublicacionBase : public IPublicacion
 {
     public:
+            // Constructor explícito
+        PublicacionBase(const string& autor);
         // función para mostrar el contenido de la publicación
         string contenido() const override;
         // función para modificar el contenido de la publicación
@@ -20,7 +23,7 @@ class PublicacionBase
         string obtenerMetadata() const override;
 
     protected:
-        vector<shared_ptr<IPalabra>> contenido; // palabras que componen la publicación
+        vector<shared_ptr<IPalabra>> palabras; // palabras que componen la publicación
         // metadata de la publicación
         string autor;
         string fecha;

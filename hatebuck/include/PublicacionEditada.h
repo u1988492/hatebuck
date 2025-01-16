@@ -3,7 +3,10 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 #include <IPalabra.h>
+
+#include "PublicacionDecorator.h"
 
 using namespace std::chrono;
 
@@ -13,7 +16,7 @@ class PublicacionEditada : public PublicacionDecorator
 {
     public:
         PublicacionEditada(shared_ptr<IPublicacion> pub, string editor, string contenidoOrig)
-            : PublicacionDecorator(move(pub)), editorUsuario(move(editor)), contenidoOriginal(move(contenidoOrg)) {
+            : PublicacionDecorator(move(pub)), editorUsuario(move(editor)), contenidoOriginal(move(contenidoOrig)) {
                 auto now = std::chrono::system_clock::now();
                 auto timeT = std::chrono::system_clock::to_time_t(now);
                 fechaEdicion = std::ctime(&timeT);
@@ -28,7 +31,7 @@ class PublicacionEditada : public PublicacionDecorator
         // función para obtener los datos de la publicación
         string obtenerMetadata() const override{
             return PublicacionDecorator::obtenerMetadata() +
-                "\nEditado por: " + editorUsuario + "\Fecha de edición: " + fechaEdicion;
+                "\nEditado por: " + editorUsuario + "\nFecha de edición: " + fechaEdicion;
         }
 
     private:

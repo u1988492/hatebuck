@@ -10,6 +10,8 @@ using namespace std;
 class IPalabra
 {
     public:
+        // Constructor por defecto explícito
+        IPalabra() = default;
         // destructor por defecto
         virtual ~IPalabra() = default;
         // función para mostrar el contenido de la palabra

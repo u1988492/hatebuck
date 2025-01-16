@@ -17,6 +17,8 @@
 #include "IObserver.h"
 #include "Mensaje.h"
 
+class Moderador;
+
 using namespace std;
 
 // clase usuario: almacena los datos de un usuario y gestiona las funciones básicas del usuario, de publicación de textos, y modificación de relaciones
@@ -42,7 +44,14 @@ class Usuario : public ISubject, public IObserver{
         virtual bool editarPublicacion(size_t index, const vector<shared_ptr<IPalabra>>& nuevoContenido);
         // función para reemplazar una publicación al editarla
         void reemplazarPublicacion(size_t index, shared_ptr<IPublicacion> nuevaPublicacion);
-
+        //para acceder a las relaciones (encapsulamiento)
+        vector<pair<string, TipoRelacion>> obtenerRelaciones() const {
+            vector<pair<string, TipoRelacion>> lista;
+            for (const auto& rel : relaciones) {
+                lista.push_back(rel);
+            }
+            return lista;
+        }
         // función para enviar un mensaje privado a un usuario
         void enviarMensaje(const string& usuario, const vector<shared_ptr<IPalabra>>& contenido);
         // función para obtener los mensajes recibidos del usuario

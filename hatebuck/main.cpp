@@ -185,15 +185,16 @@ void cambiarRelacion(){
     cout << "Relación actualizada correctamente." << endl;
 
     // Mostrar el estado actualizado de las relaciones del usuario
-    cout << "Relaciones actuales de " << usuarioActual->obtNombre() << ":\n";
-    for(const auto& rel : usuarioActual->relaciones) {
+    cout << "Relaciones de " << usuarioActual->obtNombre() << ":\n";
+    for (const auto& rel : usuarioActual->obtenerRelaciones()) {
         cout << "- " << rel.first << ": ";
-        switch(rel.second){
+        switch (rel.second) {
             case TipoRelacion::SALUDADO: cout << "Saludado\n"; break;
             case TipoRelacion::CONOCIDO: cout << "Conocido\n"; break;
             case TipoRelacion::AMIGO: cout << "Amigo\n"; break;
         }
     }
+
 }
 
 // función que ejecuta el programa. lee los datos de los usuarios del archivo de entrada, gestiona el inicio de sesión, y gestiona las opciones de menú
@@ -223,7 +224,7 @@ map<string, shared_ptr<Usuario>> inicializarDatos(){
 
     // usuarios normales
     usuarios["gemmaReina"] = make_shared<Usuario>("gemmaReina", "contrasenyaImposibleDeAdivinar");
-    usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "noSeQuePoner.!#    ");
+    usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "noSeQuePoner");
     usuarios["cHodoroga"] = make_shared<Usuario>("cHodoroga", "password123");
 
     // usuarios moderadores
@@ -271,4 +272,15 @@ void login(const map<string, shared_ptr<Usuario>>& usuarios){
 
         }while(verificarPassword(pwd, nombre, usuarios) == false && retry=='S');
     }
+}
+vector<shared_ptr<IPalabra>> leerSecuenciaPalabra() {
+    vector<shared_ptr<IPalabra>> palabras;
+    string palabra;
+
+    cout << "Introduce palabras (escribe 'FIN' para terminar): " << endl;
+    while (cin >> palabra && palabra != "FIN") {
+        palabras.push_back(make_shared<Palabra>(palabra, "NORMAL"));
+    }
+
+    return palabras;
 }

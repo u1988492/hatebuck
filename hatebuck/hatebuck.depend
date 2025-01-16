@@ -20,3 +20,109 @@
 	<string>
 	"IPalabra.h"
 
+1737055483 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\ipalabra.cpp
+	"IPalabra.h"
+
+1737055409 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\ipalabra.h
+	<string>
+
+1737055164 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\palabra.cpp
+	"Palabra.h"
+
+1737058284 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\palabra.h
+	<string>
+	"IPalabra.h"
+
+1737055164 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\publicaciondecorator.cpp
+	"PublicacionDecorator.h"
+
+1737055164 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\publicaciondecorator.h
+	<memory>
+	"IPublicacion.h"
+
+1737055164 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\ipublicacion.h
+	"IPalabra.h"
+	<vector>
+
+1737055164 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\mensaje.cpp
+	"Mensaje.h"
+
+1737055621 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\mensaje.h
+	<vector>
+	<string>
+	<chrono>
+	<memory>
+	"IPalabra.h"
+
+1737059118 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\publicacionbase.cpp
+	"PublicacionBase.h"
+
+1737056588 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\publicacionbase.h
+	<string>
+	<vector>
+	<memory>
+	"IPalabra.h"
+	"IPublicacion.h"
+
+1737059017 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\publicacioneditada.cpp
+	"PublicacionEditada.h"
+
+1737056354 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\publicacioneditada.h
+	<string>
+	<vector>
+	<chrono>
+	<IPalabra.h>
+	"PublicacionDecorator.h"
+
+1737059326 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\main.cpp
+	<iostream>
+	<string>
+	<fstream>
+	<map>
+	<memory>
+	<iomanip>
+	"Usuario.h"
+	"Moderador.h"
+	"Palabra.h"
+	"IPalabra.h"
+	"Mensaje.h"
+	"Enums.h"
+
+1737057496 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\usuario.h
+	<iostream>
+	<string>
+	<vector>
+	<iomanip>
+	<unordered_map>
+	<sstream>
+	<string>
+	<memory>
+	<vector>
+	"IPublicacion.h"
+	"Enums.h"
+	"ISubject.h"
+	"IObserver.h"
+	"Mensaje.h"
+
+1737055164 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\enums.h
+
+1737055164 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\isubject.h
+	<memory>
+	"IObserver.h"
+
+1737055164 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\iobserver.h
+	<string>
+	<memory>
+
+1737057158 c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\include\moderador.h
+	"Usuario.h"
+
+1737057707 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\usuario.cpp
+	"Usuario.h"
+	"PublicacionEditada.h"
+	<algorithm>
+
+1737055164 source:c:\users\fede\desktop\tercer\software2\p5\hatebuck\hatebuck\src\moderador.cpp
+	"Moderador.h"
+	"PublicacionEditada.h"
+

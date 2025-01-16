@@ -1,6 +1,5 @@
 #include "PublicacionEditada.h"
 
-PublicacionEditada::PublicacionEditada()
-{
-    //ctor
+void PublicacionEditada::editarContenido(const vector<shared_ptr<IPalabra>>& nuevoContenido) {
+    PublicacionDecorator::editarContenido(nuevoContenido);
 }

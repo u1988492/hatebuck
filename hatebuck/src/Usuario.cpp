@@ -1,4 +1,6 @@
 #include "Usuario.h"
+#include "PublicacionEditada.h"
+#include <algorithm>
 
 bool Usuario::verificarPassword(const string& p) const{
     return password == p;
@@ -6,10 +8,6 @@ bool Usuario::verificarPassword(const string& p) const{
 
 const string& Usuario::obtNombre(){
     return nombre;
-}
-
-bool Usuario::verificarPassword(const string& p) const{
-    return password == p;
 }
 
 void Usuario::publicarTexto(shared_ptr<IPublicacion> pub){
@@ -72,9 +70,14 @@ void Usuario::enviarMensaje(const string& destinatario, const vector<shared_ptr<
 
 void Usuario::agregarObservador(const shared_ptr<IObserver>& observador){
     // añadir observador a la lista si no existe ya
-    if(find(observadores.begin(), observadores.end(), observador) == observadores.end()){
+    if(find_if(observadores.begin(), observadores.end(),
+        [&observador](const shared_ptr<IObserver>& o) {
+            return o.get() == observador.get();  // ✅ Comparar por contenido del puntero
+        }) == observadores.end())
+    {
         observadores.push_back(observador);
     }
+
 }
 
 void Usuario::eliminarObservador(const shared_ptr<IObserver>& observador){

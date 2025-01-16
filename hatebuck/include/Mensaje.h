@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <chrono>
 #include <memory>
 
 #include "IPalabra.h"
