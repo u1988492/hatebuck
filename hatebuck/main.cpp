@@ -8,6 +8,7 @@
 #include "Usuario.h"
 #include "Moderador.h"
 #include "Palabra.h"
+#include "IPalabra.h"
 #include "Mensaje.h"
 #include "Enums.h"
 
@@ -26,6 +27,7 @@ void cambiarRelacion();
 void modificarPublicacion();
 void enviarMensaje();
 void gestionarOpciones();
+vector<shared_ptr<IPalabra>> leerSecuenciaPalabra();
 
 // función principal
 int main()
@@ -85,7 +87,7 @@ void enviarMensaje(){
     }
 
     cout << "Introduce el mensaje. Cada palabra será procesada indivudualmente." << endl;
-    auto palabras = LectorPalabras::leerSecuenciaPalabra();
+    auto palabras = leerSecuenciaPalabra();
 
     usuarioActual->enviarMensaje(destinatario, palabras);
     cout << "Mensaje enviado correctamente" << endl;
@@ -146,7 +148,7 @@ void modificarPublicacion(){
 // función para gestionar la interacción con el usuario en la opción 3
 void cambiarRelacion(){
     string nombreUsuario;
-    cout << ""
+    cout << "";
 }
 
 // función que ejecuta el programa. lee los datos de los usuarios del archivo de entrada, gestiona el inicio de sesión, y gestiona las opciones de menú

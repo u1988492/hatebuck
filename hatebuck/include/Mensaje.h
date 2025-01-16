@@ -7,7 +7,7 @@
 
 #include "IPalabra.h"
 
-using namespace std;
+using namespace std::chrono;
 
 // clase mensaje: gestiona la creación de mensajes privados
 
@@ -18,9 +18,9 @@ class Mensaje
         Mensaje(string emisor, string receptor, const vector<shared_ptr<IPalabra>>&contenido)
         : emisor(move(emisor)), receptor(move(receptor)), palabras(contenido){
             // obt fecha actual del mensaje
-            auto now = std::chrono::system_clock::now();
-            auto timeT = std::chrono::system_clock::to_time_t(now);
-            fecha = std::ctime(&timeT);
+            auto now = system_clock::now();
+            auto timeT = system_clock::to_time_t(now);
+            fecha = ctime(&timeT);
         }
 
         // función para obtener el contenido del mensaje

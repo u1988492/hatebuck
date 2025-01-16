@@ -1,4 +1,5 @@
 #include "Moderador.h"
+#include "PublicacionEditada.h"
 
 bool Moderador::editarPublicacion(size_t pubIndex, const vector<shared_ptr<IPalabra>>& nuevoContenido, Usuario& usuario){
     // los moderadores pueden editar el contenido de las publicaciones de cualquier usuario

@@ -10,7 +10,7 @@ class PublicacionDecorator : public IPublicacion
 {
     public:
         explicit PublicacionDecorator(shared_ptr<IPublicacion> pub)
-            : publicacion(move(pub));
+            : publicacion(move(pub)) {}
 
         string contenido() const override{
             return publicacion->contenido();

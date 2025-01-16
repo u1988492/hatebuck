@@ -2,6 +2,7 @@
 #define IPUBLICACION_H
 
 #include "IPalabra.h"
+#include <vector>
 
 using namespace std;
 

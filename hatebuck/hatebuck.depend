@@ -1,6 +1,22 @@
 # depslib dependency file v1.0
-1736105531 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\publicaciondecorator.cpp
+1737049326 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\publicaciondecorator.cpp
 	"PublicacionDecorator.h"
 
-1736105531 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\publicaciondecorator.h
+1737049312 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\publicaciondecorator.h
+	<memory>
+	"IPublicacion.h"
+
+1737049292 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\ipublicacion.h
+	"IPalabra.h"
+	<vector>
+
+1737040881 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\ipalabra.h
+	<string>
+
+1737049236 source:c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\src\palabra.cpp
+	"Palabra.h"
+
+1737046050 c:\users\claud\desktop\cosas de la uni\tercero_gddv\software_ii\hatebuck\hatebuck\include\palabra.h
+	<string>
+	"IPalabra.h"
 
