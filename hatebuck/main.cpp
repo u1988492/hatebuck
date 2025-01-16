@@ -77,6 +77,7 @@ void gestionarOpciones(){
 void enviarMensaje(){
     string destinatario;
     cout << "Introduce el nombre del destinatario: ";
+    cin.ignore();
     getline(cin, destinatario);
 
     // comprobar si existe el usuario
@@ -126,7 +127,7 @@ void modificarPublicacion(){
     cin.ignore();
 
     cout << "Introduce el nuevo contenido. Cada palabra será procesada individualmente." << endl;
-    auto nuevaPub = leerSecuenciaPalabras();
+    auto nuevaPub = leerSecuenciaPalabra();
 
     // editar la publicación y mostrar mensaje de confirmación
     bool exito;
@@ -148,12 +149,56 @@ void modificarPublicacion(){
 // función para gestionar la interacción con el usuario en la opción 3
 void cambiarRelacion(){
     string nombreUsuario;
-    cout << "";
+    int tipoRelacion;
+
+    cout << "Introduce el nombre del usuario con el que deseas establecer una nueva relación: ";
+    cin.ignore();
+    getline(cin, nombreUsuario);
+
+    // Verificar que el usuario existe
+    auto it = usuarios.find(nombreUsuario);
+    if(it == usuarios.end()){
+        cout << "Error: Usuario no encontrado." << endl;
+        return;
+    }
+
+    // Mostrar opciones de relación
+    cout << "Selecciona el tipo de relación: \n"
+         << "1. Saludado\n"
+         << "2. Conocido\n"
+         << "3. Amigo\n"
+         << "Opción: ";
+    cin >> tipoRelacion;
+
+    TipoRelacion nuevaRelacion;
+    switch(tipoRelacion){
+        case 1: nuevaRelacion = TipoRelacion::SALUDADO; break;
+        case 2: nuevaRelacion = TipoRelacion::CONOCIDO; break;
+        case 3: nuevaRelacion = TipoRelacion::AMIGO; break;
+        default:
+            cout << "Opción inválida." << endl;
+            return;
+    }
+
+    // Establecer la nueva relación
+    usuarioActual->establecerRelacion(nombreUsuario, nuevaRelacion);
+    cout << "Relación actualizada correctamente." << endl;
+
+    // Mostrar el estado actualizado de las relaciones del usuario
+    cout << "Relaciones actuales de " << usuarioActual->obtNombre() << ":\n";
+    for(const auto& rel : usuarioActual->relaciones) {
+        cout << "- " << rel.first << ": ";
+        switch(rel.second){
+            case TipoRelacion::SALUDADO: cout << "Saludado\n"; break;
+            case TipoRelacion::CONOCIDO: cout << "Conocido\n"; break;
+            case TipoRelacion::AMIGO: cout << "Amigo\n"; break;
+        }
+    }
 }
 
 // función que ejecuta el programa. lee los datos de los usuarios del archivo de entrada, gestiona el inicio de sesión, y gestiona las opciones de menú
 void ejecutar(){
-    map<string, shared_ptr<Usuario>> usuarios = inicializarDatos();
+    usuarios = inicializarDatos();
 
     login(usuarios);
 
@@ -179,7 +224,7 @@ map<string, shared_ptr<Usuario>> inicializarDatos(){
     // usuarios normales
     usuarios["gemmaReina"] = make_shared<Usuario>("gemmaReina", "contrasenyaImposibleDeAdivinar");
     usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "noSeQuePoner.!#    ");
-    usuarios["cHodoroga"] = make_shared<Usuario("cHodoroga", "password123");
+    usuarios["cHodoroga"] = make_shared<Usuario>("cHodoroga", "password123");
 
     // usuarios moderadores
     usuarios["jordiRegincos"] = make_shared<Moderador>("jordiRegincos", "elsPatronsGraspMolan");
@@ -194,7 +239,7 @@ map<string, shared_ptr<Usuario>> inicializarDatos(){
 
 bool verificarPassword(const string& pwd, const string& nombre, const map<string, shared_ptr<Usuario>>& usuarios){
     auto it = usuarios.find(nombre);
-    if(it != usuarios.end() && it->second == pwd){
+    if(it != usuarios.end() && it->second->verificarPassword(pwd)){
         usuarioActual = it->second;
         return true; // contraseña correcta
     }
