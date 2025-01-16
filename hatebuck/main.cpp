@@ -206,26 +206,6 @@ void mostrarMenu(){
     cout << endl;
 }
 
-// función para inicializar datos de usuarios de la aplicación a partir del nombre y la contraseña. Devuelve un map con los usuarios creados
-map<string, shared_ptr<Usuario>> inicializarDatos(){
-    map<string, shared_ptr<Usuario>> usuarios;
-
-    // usuarios normales
-    usuarios["gemmaReina"] = make_shared<Usuario>("gemmaReina", "contrasenyaImposibleDeAdivinar");
-    usuarios["fedeDiaz"] = make_shared<Usuario>("fedeDiaz", "noSeQuePoner.!#    ");
-    usuarios["cHodoroga"] = make_shared<Usuario("cHodoroga", "password123");
-
-    // usuarios moderadores
-    usuarios["jordiRegincos"] = make_shared<Moderador>("jordiRegincos", "elsPatronsGraspMolan");
-
-    // relaciones iniciales
-    usuarios["gemmaReina"]->establecerRelacion("fedeDiaz", TipoRelacion::AMIGO);
-    usuarios["fedeDiaz"]->establecerRelacion("gemmaReina", TipoRelacion::AMIGO);
-    usuarios["cHodoroga"]->establecerRelacion("fedeDiaz", TipoRelacion::SALUDADO);
-
-    return usuarios;
-}
-
 bool verificarPassword(const string& pwd, const string& nombre, const map<string, shared_ptr<Usuario>>& usuarios){
     auto it = usuarios.find(nombre);
     if(it != usuarios.end() && it->second == pwd){
@@ -336,4 +316,136 @@ shared_ptr<IPalabra> leerPalabra(const string& entrada){
     cout << "Opción no válida" << endl;
     return nullptr;
 
+}
+
+// función para leer los datos de los usuarios y las publicaciones del archivo de entrada
+void procesarArchivoEntrada(map<string, shared_ptr<Usuario>>& usuarios){
+    // abrir archivo
+    string fichero = "datos.txt";
+    ifstream fin(fichero);
+    if(!fin.is_open()){
+        throw runtime_error("Error: El fichero [" + fichero + "] no se pudo abrir. Repasa el nombre y los permisos.");
+    }
+    // leer usuarios
+    string linea;
+    vector<string> campos;
+    bool relaciones = false;
+    bool publicaciones = false;
+
+    while(getline(fin, linea)){
+        if(linea.empty()) continue;
+
+        if(linea[0] == '='){
+            relaciones = true;
+            continue;
+        }
+        else if(linea[0] == '*'){
+            publicaciones = true;
+            continue;
+        }
+
+        campos = tokens(linea, ' ', true);
+        if(!publicaciones){
+            if(!relaciones){
+                // leyendo usuarios
+                if(campos[2] == "m"){
+                    usuarios[campos[0]] = make_shared<Moderador>(campos[0], campos[1]); // crear moderador
+                }
+                else{
+                    usuarios[campos[0]] = make_shared<Usuario>(campos[0], campos[1]); // crear usuario normal
+                }
+            }else{
+                // leyendo relaciones
+                TipoRelacion tipo;
+                if(campos[2] == "AMIGO") tipo = TipoRelacion::AMIGO;
+                else if(campos[2] == "CONOCIDO") tipo = TipoRelacion::CONOCIDO;
+                else tipo = TipoRelacion::SALUDADO;
+
+                // buscar al usuario en la lista
+                auto it = usuarios.find(campos[0]);
+                if( it != usuarios.end()){
+                    it->second->establecerRelacion(campos[1], tipo); // crear la relación leída
+                }
+            }
+
+        }
+        else{
+            // leyendo publicaciones
+            procesarPublicaciones(linea, usuarios);
+        }
+    }
+}
+
+// función encapsulada para procesar las publicaciones del archivo de entrada
+void procesarPublicaciones(const string& linea, map<string, shared_ptr<Usuario>>& usuarios, ifstream& fin){
+    vector<string> campos = tokens(linea, ' ', true);
+
+    // buscar al autor en la lista de usuarios
+    string autor = campos[0];
+    auto it = usuarios.find(autor);
+    if(it == usuarios.end()) return;
+
+    // vector para guardar las palabras de la publicacion
+    vector<shared_ptr<IPalabra>> palabras;
+    size_t nPalabras;
+
+    nPalabras = stoi(campos[1]);
+
+    string lineaPalabra;
+    for(size_t i=0; i < nPalabras; i++){
+        if(!getline(fin, lineaPalabra) || lineaPalabra.empty()) break;
+
+        auto palabraCampos = tokens(lineaPalabra, ' ', true);
+        if(palabraCampos.empty()) continue;
+
+        if(palabraCampos[0] == "S"){
+            // símbolo
+            palabras.push_back(make_shared<Simbolo>(palabraCampos[1]));
+        }
+    }
+
+}
+
+// código de eines.h para leer elementos del archivo (gracias profe)
+
+vector<string> tokens(const string &s, char separador, bool cometes) {
+    vector<string> resultat;
+    if (!s.empty()) {
+        long primer = 0, ultim = 0;
+        while (ultim != string::npos)
+            resultat.push_back(token(s, separador, cometes, primer, ultim));
+    }
+    return resultat;
+}
+
+string token(const string &s, char separador, bool cometes, long &primer, long &ultim) {
+    string t;
+
+    if (!cometes || s[primer] != '"') { // No volem tenir en compte les " o no comença per "
+        while(s[primer]==' ' && primer<s.length()) // ens  mengem els espais inicials si no hi ha cometes
+            primer++;
+        ultim = s.find(separador, primer);
+        if (ultim == string::npos)
+            t = s.substr(primer);
+        else {
+            t = s.substr(primer, ultim - primer);
+            primer = ultim + 1; // ens mengem la ,
+        }
+    } else { // comença per " i les volem tenir en compte com delimitadors
+        primer++;
+        ultim = s.find('"', primer);
+        while (s.length()>ultim+1 && s[ultim+1]=='"') {
+            ultim = s.find('"', ultim+2); //saltem "" dobles seguides
+        }
+
+        if (ultim == string::npos)
+            throw ("cometes no tancades");
+        else {
+            t = s.substr(primer, ultim - primer);
+            primer = ultim + 2; // ens mengem els ",
+            if (primer > s.length())
+                ultim = string::npos; //era l'últim token
+        }
+    }
+    return t;
 }
